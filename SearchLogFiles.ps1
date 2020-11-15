@@ -20,4 +20,12 @@ param (
     [Parameter(ValueFromPipeline=$true, Mandatory=$true)][string]$SearchString
 )
 
+if ([System.IO.File]::Exists($OutputFile)) {
+    Clear-Content $OutputFile -Force
+}
+
 Get-ChildItem -Path $LogPath -Recurse -Include *.log, *.txt | Select-String -Pattern $SearchString | Set-Content $OutputFile -Force
+
+$LineCount = (Get-Content $OutputFile).Length
+
+Write-Host $LineCount "lines written to file" $OutputFile
